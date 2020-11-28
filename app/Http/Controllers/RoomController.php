@@ -23,7 +23,8 @@ class RoomController extends Controller
         $rooms = Room::all();
 
         if($rooms){
-            $roomson = DB::table('rooms')->whereNull('winner')->get();
+            // $roomson = DB::table('rooms')->whereNull('winner')->get();
+            $roomson = DB::select('select id, name from rooms where winner is null');
         }
         else{
             return (0);
