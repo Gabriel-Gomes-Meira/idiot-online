@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Broadcasting\RoomChannel;
-use App\Events\BroadcastRoom;
-use App\Models\Room;
-use Carbon\Traits\Timestamp;
-use Illuminate\Broadcasting\BroadcastEvent;
+use App\Models\Card;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
-
-class RoomController extends Controller
+class BaralhoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,17 +15,10 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = Room::all();
-
-        if($rooms){
-            $roomson = DB::table('rooms')->whereNull('winner')->get();
-        }
-        else{
-            return (0);
-        }
+        $cards = Card::all();
 
         return response()->json([
-            "rooms" => $roomson
+            "cards" => $cards
         ]);
     }
 
@@ -52,28 +40,41 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        $qplay = 1;
 
-        $created =Room::create([
+        $exploded = explode(',', $request->image);
+
+        $decoded = base64_decode($exploded[1]);
+
+        if(str_contains($exploded[0],'jpeg'))
+            $extension = 'jpg';
+        else
+            $extension = 'png';
+
+        $name = $request->input("name");
+        $fileName = $name.'.'.$extension;
+
+        $path = public_path().'/'.$fileName;
+
+        file_put_contents($path, $decoded);
+
+        $Card = Card::create([
             "name" => $request->input("name"),
-            "password" => $request->input("password"),
-            "qtdplayer" => $qplay
+            "valor" => $request->input("valor"),
+            'image' => $fileName
         ]);
 
-
-        return response()->json([
-            'created' => $created
-        ]);
+        $Card->save();
+        return $Card;
 
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Room  $room
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Room $room)
+    public function show($id)
     {
         //
     }
@@ -81,10 +82,10 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Room  $room
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Room $room)
+    public function edit($id)
     {
         //
     }
@@ -93,10 +94,10 @@ class RoomController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Room  $room
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Room $room)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -104,10 +105,10 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Room  $room
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Room $room)
+    public function destroy($id)
     {
         //
     }

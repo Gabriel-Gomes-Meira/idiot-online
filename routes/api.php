@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
-
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
     return $request->user();
@@ -36,6 +36,7 @@ Route::post('/users/login', function (Request $request) {
 
 Route::post('/users/add', 'App\Http\Controllers\Usercontroller@store');
 
+
 Route::post('/room/create', 'App\Http\Controllers\Roomcontroller@store');
 
 Route::get('/room','App\Http\Controllers\Roomcontroller@index');
@@ -44,29 +45,34 @@ Route::get('/baralho','App\Http\Controllers\Baralhocontroller@index');
 
 Route::post('/baralho/card','App\Http\Controllers\Baralhocontroller@store');
 
-Route::post('/room/enter/{id}', function (Request $request, $id) {
-    // try
-    // {
+Route::get('/transroom/{id}', function ($id) {
+    return event(new BroadcastRoom('veio daqui...',$id));
+    //event(new \App\Events\BroadcastRoom('palmeiras não tem mundial',$id));
+});
 
+Route::post('/room/enter/{id}', function (Request $request, $id) {
+    try {
         $Rooms = Room::all();
         $targetroom = $Rooms->find($id);
-        if( $targetroom->password != $request->input('password') || $targetroom->qtdplayer>=2){
-            return response()->json([
-                'sala' =>   '404'
-            ]);
-        }
-
-        DB::table('rooms')
+        if( $targetroom->password == $request->input('password') && $targetroom->qtdplayer<2){
+            DB::table('rooms')
                 ->where('id', $id)
                 ->update(['qtdplayer' => 2]);
-        return response()->json([
-            'sala' =>$targetroom
-        ]);
 
-    // } catch (\Throwable $th) {
-    //     return $th;
-    // }
+        event(new BroadcastRoom('teste número nove mil!', $targetroom->id));
+        return 0;
+
+        }
+
+        else{
+            return 0;
+        }
+
+    } catch (\Throwable $th) {
+        return $th;
+    }
 
 
 });
 
+Route::post('/broadcasting/auth', 'Illuminate\Broadcasting\BroadcastController@authenticate');
