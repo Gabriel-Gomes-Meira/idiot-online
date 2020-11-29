@@ -2,13 +2,11 @@
 
 use App\Models\User;
 use App\Models\Room;
-use App\Events\BroadcastRoom;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
-Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
 
 Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
     return $request->user();
@@ -45,11 +43,6 @@ Route::get('/baralho','App\Http\Controllers\Baralhocontroller@index');
 
 Route::post('/baralho/card','App\Http\Controllers\Baralhocontroller@store');
 
-Route::get('/transroom/{id}', function ($id) {
-    return event(new BroadcastRoom('veio daqui...',$id));
-    //event(new \App\Events\BroadcastRoom('palmeiras não tem mundial',$id));
-});
-
 Route::post('/room/enter/{id}', function (Request $request, $id) {
     try {
         $Rooms = Room::all();
@@ -58,9 +51,7 @@ Route::post('/room/enter/{id}', function (Request $request, $id) {
             DB::table('rooms')
                 ->where('id', $id)
                 ->update(['qtdplayer' => 2]);
-
-        event(new BroadcastRoom('teste número nove mil!', $targetroom->id));
-        return 0;
+            return 0;
 
         }
 
@@ -75,4 +66,3 @@ Route::post('/room/enter/{id}', function (Request $request, $id) {
 
 });
 
-Route::post('/broadcasting/auth', 'Illuminate\Broadcasting\BroadcastController@authenticate');
