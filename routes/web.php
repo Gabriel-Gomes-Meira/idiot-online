@@ -1,21 +1,16 @@
 <?php
 
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Support\Facades\Broadcast;
+Auth::routes();
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/admin', 'App\Http\Controllers\AuthController@adminv')->name('admin');
+Route::get('/', 'App\Http\Controllers\AuthController@adminv');
 
-Route::get('/enviaevento/{id}', function ($id) {
-    return event(new \App\Events\BroadcastRoom('Uai só...', $id));
-});
-
-Broadcast::routes(['middleware' => ['auth:api']]);
-
-Route::post('/broadcasting/auth', 'Illuminate\Broadcasting\BroadcastController@authenticate');
-
-
+Route::post('/login', 'App\Http\Controllers\AuthController@login')->name('login');
+Route::get('/admin/baralho', 'App\Http\Controllers\AuthController@baralho')->name('baralho');
+    Route::post('/admin/baralho/update/{id}', 'App\Http\Controllers\BaralhoController@update')->name('cardup');
