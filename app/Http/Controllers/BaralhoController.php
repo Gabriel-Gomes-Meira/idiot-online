@@ -18,31 +18,26 @@ class BaralhoController extends Controller
 
     public function store(Request $request)
     {
+        if($request->image){
+            $name = $request->name;
+            $extension = $request->image->extension();
 
-        $exploded = explode(',', $request->image);
+            $fileName = "$name.$extension";
+            $request->image->storeAs('cards', $fileName);
 
-        $decoded = base64_decode($exploded[1]);
+            $Card = Card::create([
+                "name" => $request->input("name"),
+                "valor" => $request->input("valor"),
+                'image' => $fileName
+            ]);
 
-        if(str_contains($exploded[0],'jpeg'))
-            $extension = 'jpg';
-        else
-            $extension = 'png';
+            $Card->save();
+            return redirect()->back()->with('message','Nova carta Criada!');
+        }
 
-        $name = $request->input("name");
-        $fileName = $name.'.'.$extension;
-
-        $path = public_path().'/'.$fileName;
-
-        file_put_contents($path, $decoded);
-
-        $Card = Card::create([
-            "name" => $request->input("name"),
-            "valor" => $request->input("valor"),
-            'image' => $fileName
-        ]);
-
-        $Card->save();
-        return redirect()->back()->withSuccess('Nova carta Criada!');
+        else{
+            return redirect()->back()->withErrors('Defina uma imagem para a carta!!');
+        }
 
     }
 
@@ -50,18 +45,11 @@ class BaralhoController extends Controller
     {
         $thecard = Card::find($id);
 
-        $exploded = explode(',', $request->image);
-        $decoded = base64_decode($request->image);
+        $name = $request->name;
+        $extension = $request->image->extension();
 
-        if(str_contains($exploded[0],'jpeg'))
-            $extension = 'jpg';
-        else
-            $extension = 'png';
-
-        $name = $thecard->name;
-        $fileName = $name.'.'.$extension;
-        $path = public_path().'/'.$fileName;
-        file_put_contents($path, $decoded);
+        $fileName = "$name.$extension";
+        $request->image->storeAs('cards', $fileName);
 
         $thecard->name = $request->name;
         $thecard->valor = $request->valor;
@@ -74,6 +62,10 @@ class BaralhoController extends Controller
 
     public function destroy($id)
     {
-        //
+
+        $thecard = Card::find($id);
+        $thecard->delete();
+
+        return redirect()->back()->with('message','Carta deletada');
     }
 }

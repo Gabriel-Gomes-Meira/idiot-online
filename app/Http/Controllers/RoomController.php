@@ -21,6 +21,7 @@ class RoomController extends Controller
             return (0);
         }
 
+
         return response()->json([
             "rooms" => $roomson
         ]);
@@ -54,5 +55,9 @@ class RoomController extends Controller
         else{
             $foundroom->delete();
         }
+
+        return response()->json([
+            'message' => 'created'
+        ], 200);
     }
 }

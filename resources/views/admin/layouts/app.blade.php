@@ -37,13 +37,13 @@
                 <li>
                     <a href="{{ route('baralho') }}">Cards</a>
                 </li>
-{{--
-                <li>
-                    <a href="{{ routes('users') }}">Usuários</a>
-                </li>
 
                 <li>
-                    <a href="{{routes('rooms')}}">Salas</a>
+                    <a href="{{ route('rooms')}}">Salas</a>
+                </li>
+
+                {{-- <li>
+                    <a href="{{ route('users') }}">Usuários</a>
                 </li> --}}
 
             </ul>
@@ -84,7 +84,7 @@
                                     @endif
                                 @else
                                     <li class="nav-item dropdown">
-                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="#userdrop" aria-haspopup="true" aria-expanded="false" v-pre>
                                             {{ Auth::user()->name }}
                                         </a>
 

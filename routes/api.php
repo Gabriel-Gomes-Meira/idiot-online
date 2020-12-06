@@ -39,8 +39,6 @@ Route::get('/room','App\Http\Controllers\Roomcontroller@index');
 
 Route::get('/baralho','App\Http\Controllers\Baralhocontroller@index');
 
-Route::post('/baralho/card','App\Http\Controllers\Baralhocontroller@store');
-
 Route::post('/room/create', 'App\Http\Controllers\Roomcontroller@store');
 
 Route::post('/room/enter/{id}', function (Request $request, $id) {

@@ -4,7 +4,7 @@
 
     body {
         font-family: 'Poppins', sans-serif;
-        background: #fafafa;
+        background: #C0FCF8;
     }
 
     p {
@@ -22,19 +22,19 @@
     }
 
     #sidebar {
-        background: #7386D5;
-        color: #fff;
+        background: #039590;
+        color: #FF6FBD;
         transition: all 0.3s;
     }
 
     #sidebar .sidebar-header {
         padding: 20px;
-        background: #6d7fcc;
+        background: #039590;
+        border-bottom: 1px solid #FF6FBD;
     }
 
     #sidebar ul.components {
         padding: 20px 0;
-        border-bottom: 1px solid #47748b;
     }
 
     #sidebar ul p {
@@ -49,19 +49,19 @@
     }
 
     #sidebar ul li a:hover {
-        color: #7386D5;
+        color: #039590;
         background: #fff;
     }
 
     #sidebar ul li.active > a, a[aria-expanded="true"] {
         color: #fff;
-        background: #6d7fcc;
+        background: #039590;
     }
 
     ul ul a {
         font-size: 0.9em !important;
         padding-left: 30px !important;
-        background: #6d7fcc;
+        background: #039590;
     }
     /* fimadtional */
 
@@ -72,13 +72,13 @@
     }
 
     #sidebar {
-        min-width: 250px;
-        max-width: 250px;
+        min-width: 150px;
+        max-width: 150px;
         min-height: 100vh;
     }
 
     #sidebar.active {
-        margin-left: -250px;
+        margin-left: -150px;
     }
 
     a[data-toggle="collapse"] {
@@ -101,7 +101,7 @@
     @media (max-width: 768px) {
 
         #sidebar {
-            margin-left: -250px;
+            margin-left: -150px;
         }
 
         #sidebar.active {

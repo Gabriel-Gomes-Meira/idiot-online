@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Card;
+use App\Models\Room;
 
 class AuthController extends Controller
 {
@@ -37,5 +38,14 @@ class AuthController extends Controller
     {
         $cards = Card::all();
         return view('admin.dashboard.cards', compact('cards'));
+    }
+
+    public function rooms()
+    {
+        $rooms = Room::all();
+
+        $sortedrooms = $rooms->sortByDesc('id');
+
+        return view('admin.dashboard.rooms', compact('sortedrooms'));
     }
 }
