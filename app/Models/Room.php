@@ -14,14 +14,13 @@ class Room extends Model
     protected $fillable = [
         'name',
         'password',
-        'winner'
+        'winner',
+        'player1',
+        'player2'
     ];
 
     protected $hidden = [
         'password'
     ];
 
-    protected $attributes = [
-        'qtdplayer' => 0,
-    ];
 }

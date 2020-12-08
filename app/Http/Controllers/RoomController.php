@@ -15,12 +15,11 @@ class RoomController extends Controller
         $rooms = Room::all();
 
         if($rooms){
-            $roomson = DB::select('select id, name, qtdplayer from rooms where winner is null order by id desc');
+            $roomson = DB::select('select id, name, player1, player2 from rooms where winner is null order by created_at desc');
         }
         else{
             return (0);
         }
-
 
         return response()->json([
             "rooms" => $roomson
@@ -29,12 +28,10 @@ class RoomController extends Controller
 
     public function store(Request $request)
     {
-        $qplay = 1;
-
         $created =Room::create([
             "name" => $request->input("name"),
             "password" => $request->input("password"),
-            "qtdplayer" => $qplay
+            "player1" => $request->player1
         ]);
 
 
@@ -46,18 +43,28 @@ class RoomController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $foundroom = Room::find($id);
+        if($foundroom){
+            if($request->winner){
+                $foundroom->winner = $request->winner;
+                $foundroom->save();
+            }
+            else{
+                $foundroom->delete();
+            }
 
-        if($request->winner){
-            $foundroom->winner = $request->winner;
-            $foundroom->save();
+            return response()->json([
+                'message' => $foundroom
+            ], 200);
         }
+
         else{
-            $foundroom->delete();
+            return response()->json([
+                'message' => 'Sala não encontrada'
+            ], 404);
         }
 
-        return response()->json([
-            'message' => 'created'
-        ], 200);
+
     }
 }

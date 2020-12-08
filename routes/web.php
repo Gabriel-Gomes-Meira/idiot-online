@@ -20,3 +20,6 @@ Route::get('/admin', 'App\Http\Controllers\AuthController@adminv')->name('admin'
 
     // salas
     Route::get('/admin/rooms','App\Http\Controllers\AuthController@rooms')->name('rooms');
+
+    // users
+    Route::get('/admin/users','App\Http\Controllers\AuthController@users')->name('users');

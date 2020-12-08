@@ -14,23 +14,30 @@ Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
 });
 
 Route::post('/users/login', function (Request $request) {
+    try {
+        $user = User::where('email', $request->email)->first();
 
-    $user = User::where('email', $request->email)->first();
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response([
+                'message' => ['Não há usuário registrado com esses dados.']
+            ], 404);
+        }
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return response([
-            'message' => ['Não há usuário registrado com esses dados.']
-        ], 404);
+        $token = $user->createToken('idiot-online-token')->plainTextToken;
+        $user = collect($user)->except('admin');
+
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+        //code...
+    } catch (\Throwable $th) {
+        return $th;
     }
 
-    $token = $user->createToken('idiot-online-token')->plainTextToken;
-
-    $response = [
-        'user' => $user,
-        'token' => $token
-    ];
-
-    return response($response, 201);
 });
 
 Route::post('/users/add', 'App\Http\Controllers\Usercontroller@store');
@@ -39,34 +46,31 @@ Route::get('/room','App\Http\Controllers\Roomcontroller@index');
 
 Route::get('/baralho','App\Http\Controllers\Baralhocontroller@index');
 
-Route::post('/room/create', 'App\Http\Controllers\Roomcontroller@store');
+Route::post('/room/create', 'App\Http\Controllers\RoomController@store');
 
 Route::post('/room/enter/{id}', function (Request $request, $id) {
-    try {
-        $Rooms = Room::all();
-        $targetroom = $Rooms->find($id);
-        if( $targetroom->password == $request->input('password') && $targetroom->qtdplayer<2){
-            DB::table('rooms')
-                ->where('id', $id)
-                ->update(['qtdplayer' => 2]);
+
+        $targetroom = Room::find($id);
+
+        if( $targetroom->password == $request->input('password') && !$targetroom->player2){
+            $targetroom->player2 = $request->player2;
+            $targetroom->save();
             return response([
-                'message' => "0",
+                'message' => "conected",
+                'confirm' => '0',
                 200
             ]);
         }
 
         else{
             return response([
-                'message' => "1",
+                'message' => "Sala já ocupada, ou senha incorreta",
+                'confirm' => '1',
                 404
             ]);
         }
 
-    } catch (\Throwable $th) {
-        return $th;
-    }
-
 
 });
 
-Route::post('/room/closed/{id}', 'RoomController@update');
+Route::post('/room/closed/{id}', 'App\Http\Controllers\RoomController@update');

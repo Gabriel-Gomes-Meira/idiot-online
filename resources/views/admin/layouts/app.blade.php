@@ -42,9 +42,9 @@
                     <a href="{{ route('rooms')}}">Salas</a>
                 </li>
 
-                {{-- <li>
+                <li>
                     <a href="{{ route('users') }}">Usuários</a>
-                </li> --}}
+                </li>
 
             </ul>
         </nav>
@@ -83,8 +83,9 @@
                                         </li>
                                     @endif
                                 @else
+
                                     <li class="nav-item dropdown">
-                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="#userdrop" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                             {{ Auth::user()->name }}
                                         </a>
 
