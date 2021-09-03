@@ -24,18 +24,6 @@ class User extends Authenticatable
         'admin'
     ];
 
-    public static $rules = array(
-        'name' => 'required',
-        'email' => 'required | unique:App\User,email',
-        'password' => 'required'
-    );
-
-    public static $messages = array(
-        'name.required' => "Necessário 'nome' para que um usuário seja criado!",
-        'email.required' => "Necessário 'e-mail' para que um usuário seja criado!",
-        'password.required' => "Necessário 'senha' para que um usuário seja criado!",
-    );
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -44,4 +32,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password'
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
 }
