@@ -1,46 +1,24 @@
 <?php
 
-use App\Models\User;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
 
-Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
-    return $request->user();
-});
-
-Route::post('/users/login', function (Request $request) {
-    try {
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response([
-                'message' => ['Não há usuário registrado com esses dados.']
-            ], 404);
-        }
-
-        $token = $user->createToken('idiot-online-token')->plainTextToken;
-        $user = collect($user)->except('admin');
-
-
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
-
-        return response($response, 201);
-        //code...
-    } catch (\Throwable $th) {
-        return $th;
-    }
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('user', 'AuthController@me');
 
 });
 
-Route::post('/users/add', 'App\Http\Controllers\Usercontroller@store');
+
+Route::post('/register', 'App\Http\Controllers\Usercontroller@store');
 
 Route::get('/room','App\Http\Controllers\Roomcontroller@index');
 
