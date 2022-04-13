@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 
 class RoomController extends Controller
@@ -15,7 +16,8 @@ class RoomController extends Controller
         $rooms = Room::all();
 
         if($rooms){
-            $roomson = DB::select('select id, name, player1, player2 from rooms where winner is null order by created_at desc');
+            $roomson = DB::select('select r.id as idroom, r.name, u.name as player1, r.created_at from rooms r
+            inner join users u on (u.id = r.player1) where winner is null order by created_at desc');
         }
         else{
             return (0);
@@ -26,12 +28,18 @@ class RoomController extends Controller
         ]);
     }
 
+    public function teste() {
+        return response()->json([
+            'message' => "CHEGOU AQUI",
+        ], 200);
+    }
+
     public function store(Request $request)
     {
         $created =Room::create([
             "name" => $request->input("name"),
             "password" => $request->input("password"),
-            "player1" => $request->player1
+            "player1" => Auth::user()->id
         ]);
 
 
@@ -66,5 +74,26 @@ class RoomController extends Controller
         }
 
 
+    }
+
+    public function enter(Request $request) {
+
+        $targetroom = Room::find($request->idroom);
+
+        if( $targetroom->password == $request->password && !$targetroom->player2){
+            $targetroom->player2 = Auth::user()->id;
+            $targetroom->save();
+            return response([
+                'message' => "O jogo irá começar.",
+                'confirm' => '0',
+            ], 200);
+        }
+
+        else{
+            return response([
+                'message' => "Sala já ocupada, ou senha incorreta",
+                'confirm' => '1',
+            ], 200);
+        }
     }
 }

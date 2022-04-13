@@ -9,68 +9,20 @@ use Illuminate\Support\Facades\Hash;
 
 
 
-Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
-    return $request->user();
+Route::post('/teste', function () {
+    return response()->json([
+        'message' => "CHEGOU AQUI",
+    ], 200);
 });
 
-Route::post('/users/login', function (Request $request) {
-    try {
-        $user = User::where('email', $request->email)->first();
+Route::get('user', 'AuthController@me')->middleware('auth:sanctum');
+Route::post('/register', 'Usercontroller@store');
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response([
-                'message' => ['Não há usuário registrado com esses dados.']
-            ], 404);
-        }
-
-        $token = $user->createToken('idiot-online-token')->plainTextToken;
-        $user = collect($user)->except('admin');
+Route::get('/room','RoomController@index')->middleware('auth:sanctum');
+Route::post('/room/create', 'RoomController@store')->middleware('auth:sanctum');
+Route::post('/room/enter', 'RoomController@enter')->middleware('auth:sanctum');
 
 
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
+Route::get('/baralho','Baralhocontroller@index')->middleware('auth:sanctum');
 
-        return response($response, 201);
-        //code...
-    } catch (\Throwable $th) {
-        return $th;
-    }
-
-});
-
-Route::post('/users/add', 'App\Http\Controllers\Usercontroller@store');
-
-Route::get('/room','App\Http\Controllers\Roomcontroller@index');
-
-Route::get('/baralho','App\Http\Controllers\Baralhocontroller@index');
-
-Route::post('/room/create', 'App\Http\Controllers\RoomController@store');
-
-Route::post('/room/enter/{id}', function (Request $request, $id) {
-
-        $targetroom = Room::find($id);
-
-        if( $targetroom->password == $request->input('password') && !$targetroom->player2){
-            $targetroom->player2 = $request->player2;
-            $targetroom->save();
-            return response([
-                'message' => "conected",
-                'confirm' => '0',
-                200
-            ]);
-        }
-
-        else{
-            return response([
-                'message' => "Sala já ocupada, ou senha incorreta",
-                'confirm' => '1',
-                404
-            ]);
-        }
-
-
-});
-
-Route::post('/room/closed/{id}', 'App\Http\Controllers\RoomController@update');
+// Route::post('/room/closed/{id}', 'App\Http\Controllers\RoomController@update');

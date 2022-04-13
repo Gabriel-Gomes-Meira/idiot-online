@@ -4,22 +4,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/', 'App\Http\Controllers\AuthController@adminv');
+// Route::get('/', 'AuthController@adminv');
 
-Route::post('/login', 'App\Http\Controllers\AuthController@login')->name('login');
-Route::get('/admin', 'App\Http\Controllers\AuthController@adminv')->name('admin');
-    // cards
-    Route::get('/admin/baralho', 'App\Http\Controllers\AuthController@baralho')->name('baralho');
-        Route::post('/admin/baralho/add', 'App\Http\Controllers\BaralhoController@store')->name('cardadd');
-        Route::post('/admin/baralho/update/{id}', 'App\Http\Controllers\BaralhoController@update')->name('cardup');
-        Route::post('/admin/baralho/delete/{id}', 'App\Http\Controllers\BaralhoController@destroy')->name('carddel');
+Route::post('/login', 'AuthController@login')->name('login');
+Route::post('/logout', 'AuthController@logout')->name('logout');
+// Route::post('/room/create', 'RoomController@store')->name('create');
+// Route::get('/admin', 'AuthController@adminv')->name('admin');
 
-    // salas
-    Route::get('/admin/rooms','App\Http\Controllers\AuthController@rooms')->name('rooms');
+//     // cards
+//     Route::get('/admin/baralho', 'AuthController@baralho')->name('baralho');
+//         Route::post('/admin/baralho/add', 'BaralhoController@store')->name('cardadd');
+//         Route::post('/admin/baralho/update/{id}', 'BaralhoController@update')->name('cardup');
+//         Route::post('/admin/baralho/delete/{id}', 'BaralhoController@destroy')->name('carddel');
 
-    // users
-    Route::get('/admin/users','App\Http\Controllers\AuthController@users')->name('users');
+//     // salas
+//     Route::get('/admin/rooms','AuthController@rooms')->name('rooms');
+
+//     // users
+//     Route::get('/admin/users','AuthController@users')->name('users');

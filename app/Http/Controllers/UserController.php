@@ -16,6 +16,9 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        // return response()->json([
+        //     "created" => dd($request)
+        // ], 200);
         try {
             $created = User::create([
                 "name" => $request->input("name"),
